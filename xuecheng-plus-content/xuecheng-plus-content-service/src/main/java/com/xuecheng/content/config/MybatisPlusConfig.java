@@ -1,0 +1,29 @@
+package com.xuecheng.content.config;
+
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * <P>
+ *        Mybatis-Plus 配置
+ * </p>
+ */
+@Configuration
+@MapperScan("com.xuecheng.content.mapper")//因为mapper接口上没有加上@mapper注解，所以需要告知需要扫描的包
+public class MybatisPlusConfig {
+   /**
+    * 定义分页拦截器
+    */
+   @Bean
+   public MybatisPlusInterceptor mybatisPlusInterceptor() {
+      MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+      interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+      return interceptor;
+   }
+   
+
+}
