@@ -17,5 +17,17 @@
     <sql id="Base_Column_List">
         id, name, label, parentid, is_show, orderby, is_leaf
     </sql>
+    <select id="childrenTreeNodes" resultType="com.xuecheng.content.model.dto.CourseCategoryTreeDto"
+            parameterType="java.lang.String">
+        with recursive categorys as (
+            select * from course_category  where id =#{id}
+            union all
+            select c1.* from course_category c1  inner join categorys c2
+            on c2.id=c1.parentid
+        )
+        select * from categorys
+        order by categorys.id
+    </select>
+
 
 </mapper>
