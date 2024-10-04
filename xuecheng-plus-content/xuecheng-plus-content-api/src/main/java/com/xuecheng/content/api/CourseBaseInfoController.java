@@ -1,15 +1,18 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.base.exception.ValidationGroups;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.model.dto.AddCourseDto;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
+import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.CourseBaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -48,11 +51,35 @@ public class CourseBaseInfoController {
      * @return 添加后要返回的信息
      */
     @ApiOperation("新增课程基础信息")
-    @PostMapping("/course")
-    public CourseBaseInfoDto createCourseBase(@RequestBody AddCourseDto addCourseDto){
+    @PostMapping("/course") //@Validated 用于jsr303校验
+    public CourseBaseInfoDto createCourseBase(@RequestBody @Validated(/*ValidationGroups.Insert.class*/) AddCourseDto addCourseDto){
         //TODO 获取用户所属机构的id
         Long companyId = 1232141425L;
         return courseBaseService.createCourseBase(companyId,addCourseDto);
+    }
+
+    /**
+     * 根据id查询课程信息
+     * @param courseId 课程id
+     * @return 查到的课程信息，用到课程基本信息表和课程营销表
+     */
+    @ApiOperation("根据id查询课程信息")
+    @GetMapping("/course/{courseId}")
+    public CourseBaseInfoDto getCourseBaseById(@PathVariable("courseId") Long courseId){
+        return courseBaseService.getCourseBaseById(courseId);
+    }
+
+    /**
+     * 修改课程
+     * @param editCourseDto 要修改的课程的新信息
+     * @return 返回修改完后的课程信息
+     */
+    @ApiOperation("修改课程")
+    @PutMapping("/course")
+    public CourseBaseInfoDto modifyCourseBase(@RequestBody @Validated EditCourseDto editCourseDto){
+        //TODO 获取机构id
+        Long companyId=1232141425L;
+        return courseBaseService.updateCourseBase(companyId,editCourseDto);
     }
 
 }
