@@ -26,7 +26,7 @@ public class CourseBaseServiceTests {
     private CourseBaseService courseBaseService;
 
     @Test
-    void testBaseMapper() {
+    void testBaseService() {
 
         //查询条件
         QueryCourseParamsDto queryCourseParamsDto =new QueryCourseParamsDto();

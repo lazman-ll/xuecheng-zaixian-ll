@@ -10,9 +10,7 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 /**
- * @description 添加课程dto
- * @author Mr.M
- * @date 2022/9/7 17:40
+ * @description 添加课程dto(添加课程基本信息时的请求参数)
  * @version 1.0
  */
 @Data

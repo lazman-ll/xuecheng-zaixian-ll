@@ -1,8 +1,11 @@
 package com.xuecheng.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.xuecheng.base.exception.ValidationGroups;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -28,16 +31,20 @@ public class CourseTeacher implements Serializable {
     /**
      * 课程标识
      */
+    //Long判断不能为空，要用NotNull，不然会报错
+    @NotNull(message = "课程id不能为空" ,groups = ValidationGroups.Insert.class)
     private Long courseId;
 
     /**
      * 教师标识
      */
+    @NotEmpty(message = "教师标识不能为空",groups = ValidationGroups.Insert.class)
     private String teacherName;
 
     /**
      * 教师职位
      */
+    @NotEmpty(message = "教师职位不能为空",groups = ValidationGroups.Insert.class)
     private String position;
 
     /**
@@ -55,6 +62,5 @@ public class CourseTeacher implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createDate;
-
 
 }
