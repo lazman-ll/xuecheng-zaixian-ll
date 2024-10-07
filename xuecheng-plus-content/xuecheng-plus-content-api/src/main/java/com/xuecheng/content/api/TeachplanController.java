@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Api("课程计划编辑接口")
+@Api(tags = "课程计划编辑接口")
 @Slf4j
 public class TeachplanController {
 

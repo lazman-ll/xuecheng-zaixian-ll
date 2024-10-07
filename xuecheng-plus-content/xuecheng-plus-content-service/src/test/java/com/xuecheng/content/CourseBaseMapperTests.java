@@ -1,7 +1,8 @@
-
+package com.xuecheng.content;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xuecheng.ContentApplication;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.mapper.CourseBaseMapper;
 import com.xuecheng.content.model.po.CourseBase;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * 课程基本信息测试类
  */
-@SpringBootTest
+@SpringBootTest(classes = ContentApplication.class)
 public class CourseBaseMapperTests {
 
     @Autowired

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@Api("师资管理接口")
+@Api(tags = "师资管理接口")
 @RequestMapping("/courseTeacher")
 public class CourseTeacherController {
 
