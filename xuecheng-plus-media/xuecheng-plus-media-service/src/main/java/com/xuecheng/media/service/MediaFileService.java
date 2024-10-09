@@ -1,14 +1,19 @@
 package com.xuecheng.media.service;
 
+import com.sun.org.apache.xpath.internal.operations.And;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
+import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.media.model.dto.QueryMediaParamsDto;
 import com.xuecheng.media.model.dto.UploadFileParamsDto;
 import com.xuecheng.media.model.dto.UploadFileResultDto;
 import com.xuecheng.media.model.po.MediaFiles;
+import org.hibernate.validator.internal.metadata.provider.AnnotationMetaDataProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.xml.ws.soap.Addressing;
 import java.util.List;
 
 /**
@@ -46,4 +51,46 @@ public interface MediaFileService {
     MediaFiles addMediaFilesToDb(
             String fileMd5, Long companyId, UploadFileParamsDto uploadFileParamsDto,
             String bucket, String objectName);
+
+   /**
+    * @author 闲人指路
+    * @description 检查文件是否存在
+    * @dateTime 18:20 2024/10/9
+    * @param fileMd5 文件的md5
+    * @return com.xuecheng.base.model.RestResponse<java.lang.Boolean>
+   */
+    public RestResponse<Boolean> checkFile(String fileMd5);
+
+    /**
+     * @author 闲人指路
+     * @description 检查分块文件是否存在
+     * @dateTime 18:22 2024/10/9
+     * @param fileMd5 文件的md5
+     * @param chunkIndex 分块序号
+     * @return com.xuecheng.base.model.RestResponse<java.lang.Boolean>
+    */
+    public RestResponse<Boolean> checkChunk(String fileMd5, int chunkIndex);
+
+    /**
+     * @author 闲人指路
+     * @description 上传分块文件
+     * @dateTime 18:50 2024/10/9
+     * @param localFilePath 文件的本地存储路径
+     * @param fileMd5 文件的md5
+     * @param chunk 分块序号
+     * @return com.xuecheng.base.model.RestResponse
+    */
+    RestResponse uploadChunk(String localFilePath, String fileMd5, int chunk);
+
+    /**
+     * @author 闲人指路
+     * @description 合并分块
+     * @dateTime 20:25 2024/10/9
+     * @param companyId companyId
+     * @param fileMd5 文件md5
+     * @param chunkTotal 分块总个数
+     * @param uploadFileParamsDto 文件信息
+     * @return com.xuecheng.base.model.RestResponse
+    */
+    public RestResponse mergechunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto uploadFileParamsDto);
 }
