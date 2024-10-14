@@ -8,12 +8,14 @@ import com.xuecheng.media.model.dto.QueryMediaParamsDto;
 import com.xuecheng.media.model.dto.UploadFileParamsDto;
 import com.xuecheng.media.model.dto.UploadFileResultDto;
 import com.xuecheng.media.model.po.MediaFiles;
+import com.xuecheng.media.model.po.MediaProcess;
 import org.hibernate.validator.internal.metadata.provider.AnnotationMetaDataProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.ws.soap.Addressing;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -93,4 +95,25 @@ public interface MediaFileService {
      * @return com.xuecheng.base.model.RestResponse
     */
     public RestResponse mergechunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto uploadFileParamsDto);
+
+    /**
+     * @author 闲人指路
+     * @description 从minio下载文件
+     * @dateTime 20:41 2024/10/9
+     * @param bucket 桶
+     * @param objectName 对象名称
+     * @return java.io.File
+     */
+    public File downloadFileFromMinIO(String bucket, String objectName);
+
+    /**
+     * 上传文件到minio
+     * @param localFilePath
+     * @param mimeType
+     * @param bucket
+     * @param objectName
+     * @return
+     */
+     boolean addMediaFiles2MinIo(String localFilePath, String mimeType, String bucket, String objectName);
+
 }

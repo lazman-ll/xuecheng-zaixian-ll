@@ -31,10 +31,25 @@ public class VideoUtil {
         if(source_time == null || target_time == null){
             return false;
         }
-        if(source_time.equals(target_time)){
+        // 将时间字符串转换为秒数
+        double sourceTimeSec = parseTimeToSeconds(source_time);
+        double targetTimeSec = parseTimeToSeconds(target_time);
+
+        // 计算两个时间的差值
+        double diff = Math.abs(sourceTimeSec - targetTimeSec);
+        if(diff <= 2){
             return true;
         }
         return false;
+    }
+
+    private double parseTimeToSeconds(String timeStr) {
+        String[] parts = timeStr.split(":");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+        int seconds = Integer.parseInt(parts[2]);
+
+        return hours * 3600 + minutes * 60 + seconds;
     }
 
     //获取视频时间(时：分：秒：毫秒)
