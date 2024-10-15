@@ -489,5 +489,9 @@ public class MediaFileServiceImpl implements MediaFileService {
         }
     }
 
-
+    @Override
+    public MediaFiles getFileById(String mediaId) {
+        // 从数据库查询媒资文件信息
+        return mediaFilesMapper.selectById(mediaId);
+    }
 }

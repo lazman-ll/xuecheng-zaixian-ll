@@ -116,4 +116,10 @@ public interface MediaFileService {
      */
      boolean addMediaFiles2MinIo(String localFilePath, String mimeType, String bucket, String objectName);
 
+    /**
+     * 获取已转码视频的url
+     * @param mediaId
+     * @return
+     */
+    MediaFiles getFileById(String mediaId);
 }
