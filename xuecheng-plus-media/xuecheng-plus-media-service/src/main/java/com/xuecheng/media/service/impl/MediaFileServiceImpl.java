@@ -480,12 +480,12 @@ public class MediaFileServiceImpl implements MediaFileService {
                     deleteError = r.get();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    log.error("清楚分块文件失败,objectname:{}", deleteError.objectName(), e);
+                    log.error("清理分块文件失败,objectname:{}", deleteError.objectName(), e);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("清楚分块文件失败,chunkFileFolderPath:{}", chunkFileFolderPath, e);
+            log.error("清理分块文件失败,chunkFileFolderPath:{}", chunkFileFolderPath, e);
         }
     }
 

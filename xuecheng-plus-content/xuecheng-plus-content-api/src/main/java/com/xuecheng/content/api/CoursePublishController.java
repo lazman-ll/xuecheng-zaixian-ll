@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.concurrent.PriorityBlockingQueue;
@@ -37,4 +39,18 @@ public class CoursePublishController {
         modelAndView.setViewName("course_template");
         return modelAndView;
     }
+
+    /**
+     * 提交审核
+     * @param courseId
+     */
+    @ResponseBody
+    @PostMapping("/courseaudit/commit/{courseId}")
+    public void commitAudit(@PathVariable("courseId") Long courseId){
+        //TODO 获取机构id
+        Long companyId=1232141425L;
+        coursePublishService.commitAudit(companyId,courseId);
+    }
+
+    //TODO 审核过程暂未实现，现通过修改数据库模拟实现
 }
