@@ -90,7 +90,7 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     @Override
-    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath) {
+    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath,String objectName) {
         //上传文件到minio
         //1.先得到扩展名
         String filename = uploadFileParamsDto.getFilename();
@@ -106,7 +106,10 @@ public class MediaFileServiceImpl implements MediaFileService {
             XueChengPlusException.cast("获取文件md5值失败");
         }
         //3.3拼接文件路径
-        String objectName = folder + fileMd5 + extension;
+        if(StringUtils.isEmpty(objectName)){
+            //若不传objectName，则使用年月日作为存储路径，md5值为文件名
+            objectName = folder + fileMd5 + extension;
+        }
         //3.上传文件到minio
         boolean result = addMediaFiles2MinIo(localFilePath, mimeType, bucket_mediafiles, objectName);
         if(!result){

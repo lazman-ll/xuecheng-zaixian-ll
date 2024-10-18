@@ -618,7 +618,7 @@
                 <img :src="qrcode" width="200" height="200" alt="请点击支付宝支付按钮，并完成扫码支付。"/>
 
                 <div class="info">
-                    <p class="info-tit">${model.courseBase.name}<span>课程有效期:${model.courseBase.validDays}天</span></p>
+                    <p class="info-tit">${model.courseBase.name}<span>课程有效期:${model.courseBase.validDays!365}天</span></p>
                     <p class="info-pic">课程价格 : <span>￥${model.courseBase.originalPrice!''}元</span></p>
                     <p class="info-new-pic">优惠价格 : <span>￥${model.courseBase.price!''}元</span></p>
                 </div>

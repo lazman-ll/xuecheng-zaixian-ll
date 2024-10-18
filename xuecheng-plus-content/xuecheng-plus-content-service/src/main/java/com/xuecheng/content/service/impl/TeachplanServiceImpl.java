@@ -92,7 +92,7 @@ public class TeachplanServiceImpl implements TeachplanService {
         return teachplan.getOrderby();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteTeachplan(Long id) {
         //1.根据课程计划id查询课程，判断课程是否存在
@@ -136,7 +136,7 @@ public class TeachplanServiceImpl implements TeachplanService {
         }
     }
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void moveTeachplan(String moveType, Long id) {
         //1.根据查询出当前课程计划
         Teachplan teachplan = teachplanMapper.selectById(id);

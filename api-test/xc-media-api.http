@@ -1,9 +1,7 @@
-### 上传文件
-POST {{media_host}}/media/upload/coursefile
-Content-Type: multipart/form-data; boundary=WebAppBoundary
+### 添加课程索引
+POST {{search_host}}/search/index/course
+Content-Type: application/json
 
---WebAppBoundary
-Content-Disposition: form-data; name="filedata"; filename="home.jpg"
-Content-Type: application/octet-stream
-
-< C:\Users\33124\Pictures\home.jpg
+### 搜索课程
+GET {{search_host}}/search/course/list?pageNo=1&keywords=spring
+Content-Type: application/json

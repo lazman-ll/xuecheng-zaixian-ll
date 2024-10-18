@@ -108,12 +108,12 @@ public class VideoTask {
                     Mp4VideoUtil videoUtil = new Mp4VideoUtil(ffmpeg_path,video_path,mp4_name,mp4_path);
                     //开始视频转换，成功将返回success
                     String result = videoUtil.generateMp4();
-                    /*if(!"success".equals(result)){
+                    if(!"success".equals(result)){
                         //转码失败，保存失败详细
                         log.error("视频转码失败,任务id:{},bucket:{},objectName:{},error:{}",taskId,mediaProcess.getBucket(),mediaProcess.getFilePath(),result);
                         mediaFileProcessService.saveProcessFinishStatus(taskId,"3",fileId,null,"视频转码失败");
                         return ;
-                    }*/
+                    }
                     //5.将得到的mp4视频上传到minio
                     boolean addMediaFiles2MinIo = mediaFileService.addMediaFiles2MinIo(mp4_path, "video/mp4", bucket, objectName);
                     if (!addMediaFiles2MinIo){

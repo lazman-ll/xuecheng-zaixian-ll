@@ -53,4 +53,17 @@ public class CoursePublishController {
     }
 
     //TODO 审核过程暂未实现，现通过修改数据库模拟实现
+
+    /**
+     * 课程发布
+     * @param courseId 课程id
+     */
+    @ApiOperation("课程发布")
+    @ResponseBody
+    @PostMapping ("/coursepublish/{courseId}")
+    public void coursepublish(@PathVariable("courseId") Long courseId){
+        // todo 获取机构id
+        Long companyId=1232141425L;
+        coursePublishService.publish(companyId,courseId);
+    }
 }

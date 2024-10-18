@@ -18,13 +18,19 @@ import java.util.List;
 @ApiModel(value = "CoursePreviewDto",description = "课程预览模型类")
 public class CoursePreviewDto {
 
-    //课程基本信息，课程营销信息
+    /**
+     * 课程基本信息，课程营销信息
+     */
     @ApiModelProperty("课程基本信息，课程营销信息")
     private CourseBaseInfoDto courseBase;
-    //课程计划信息
+    /**
+     * 课程计划信息
+     */
     @ApiModelProperty("课程计划信息")
     private List<TeachPlanDto> teachplans;
-    //课程师资信息
+    /**
+     * 课程师资信息
+     */
     @ApiModelProperty("课程师资信息")
     private List<CourseTeacher> courseTeachers;
 }
