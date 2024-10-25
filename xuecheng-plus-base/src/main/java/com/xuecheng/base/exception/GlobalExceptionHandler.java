@@ -63,6 +63,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)//用于指定 HTTP 响应的状态码
     public RestErrorResponse exception(Exception e){
+        if("不允许访问".equals(e.getMessage())){
+            return new RestErrorResponse("您无权限操作此功能！");
+        }
         //打印日志
         log.error("系统异常{}",e.getMessage(),e);
         //将该异常信息，封装为与前端约定的对象RestErrorResponse

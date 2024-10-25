@@ -34,7 +34,7 @@ public class CourseBaseServiceTests {
         queryCourseParamsDto.setAuditStatus("202004");
         //分页查询
         PageParams page=new PageParams(1L,2L);
-        PageResult<CourseBase> courseBasePageResult = courseBaseService.queryCourseBasePages(page, queryCourseParamsDto);
+        PageResult<CourseBase> courseBasePageResult = courseBaseService.queryCourseBasePages(1232141425L,page, queryCourseParamsDto);
         System.out.println("courseBasePageResult = " + courseBasePageResult);
     }
 }

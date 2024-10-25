@@ -9,9 +9,12 @@ import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.CourseBaseService;
+import com.xuecheng.content.utils.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,10 +41,20 @@ public class CourseBaseInfoController {
      */
     @ApiOperation("课程信息查询接口")
     @PostMapping ("/course/list")
+    //指定权限标识符
+    @PreAuthorize("hasAnyAuthority('xc_teachmanager_course_list')")
     public PageResult<CourseBase> list
             (PageParams pageParams,
              @RequestBody(required = false) QueryCourseParamsDto queryCourseParamsDto){
-        PageResult<CourseBase> pageResult = courseBaseService.queryCourseBasePages(pageParams, queryCourseParamsDto);
+        //获取机构id
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        Long companyId = null;
+        if(user!=null){
+            if(StringUtils.isNotEmpty(user.getCompanyId())){
+                companyId = Long.valueOf(user.getCompanyId());
+            }
+        }
+        PageResult<CourseBase> pageResult = courseBaseService.queryCourseBasePages(companyId,pageParams, queryCourseParamsDto);
         return pageResult;
     }
 
@@ -53,8 +66,14 @@ public class CourseBaseInfoController {
     @ApiOperation("新增课程基础信息")
     @PostMapping("/course") //@Validated 用于jsr303校验
     public CourseBaseInfoDto createCourseBase(@RequestBody @Validated(/*ValidationGroups.Insert.class*/) AddCourseDto addCourseDto){
-        //TODO 获取用户所属机构的id
-        Long companyId = 1232141425L;
+        // 获取用户所属机构的id
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        Long companyId = null;
+        if(user!=null){
+            if(StringUtils.isNotEmpty(user.getCompanyId())){
+                companyId = Long.valueOf(user.getCompanyId());
+            }
+        }
         return courseBaseService.createCourseBase(companyId,addCourseDto);
     }
 
@@ -66,6 +85,8 @@ public class CourseBaseInfoController {
     @ApiOperation("根据id查询课程信息")
     @GetMapping("/course/{courseId}")
     public CourseBaseInfoDto getCourseBaseById(@PathVariable("courseId") Long courseId){
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        System.out.println("user = " + user);
         return courseBaseService.getCourseBaseById(courseId);
     }
 
