@@ -11,10 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 
 /**
- * @author Mr.M
- * @version 1.0
  * @description TODO
- * @date 2023/2/22 20:14
  */
 @SpringBootTest
 public class FeignClientTest {
@@ -25,7 +22,7 @@ public class FeignClientTest {
 
     @Test
     public void testContentServiceClient() {
-        CoursePublish coursepublish = contentServiceClient.getCoursepublish(18L);
+        CoursePublish coursepublish = contentServiceClient.getCoursepublish(25L);
         Assertions.assertNotNull(coursepublish);
     }
 }

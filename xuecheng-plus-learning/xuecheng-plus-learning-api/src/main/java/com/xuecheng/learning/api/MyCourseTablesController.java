@@ -6,6 +6,7 @@ import com.xuecheng.learning.model.dto.MyCourseTableParams;
 import com.xuecheng.learning.model.dto.XcChooseCourseDto;
 import com.xuecheng.learning.model.dto.XcCourseTablesDto;
 import com.xuecheng.learning.model.po.XcCourseTables;
+import com.xuecheng.learning.service.MyCourseTableService;
 import com.xuecheng.learning.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,19 +29,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MyCourseTablesController {
 
+    @Autowired
+    private MyCourseTableService myCourseTableService;
 
+    /**
+     * 选课
+     * @param courseId
+     * @return
+     */
     @ApiOperation("添加选课")
     @PostMapping("/choosecourse/{courseId}")
     public XcChooseCourseDto addChooseCourse(@PathVariable("courseId") Long courseId) {
-
-        return null;
+        //调用工具类获取当前用户
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        if(user==null){
+            XueChengPlusException.cast("请登录后继续选课");
+        }
+        String userId = user.getId();
+        //调用service接口
+        return myCourseTableService.addChooseCourse(userId,courseId);
     }
 
     @ApiOperation("查询学习资格")
     @PostMapping("/choosecourse/learnstatus/{courseId}")
     public XcCourseTablesDto getLearnstatus(@PathVariable("courseId") Long courseId) {
-
-        return null;
+        //调用工具类获取当前用户
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        if(user==null){
+            XueChengPlusException.cast("请登录后查询选课资格");
+        }
+        String userId = user.getId();
+        //调用service接口
+        return myCourseTableService.getLearningStatus(userId, courseId);
 
     }
 
