@@ -65,6 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //配置安全拦截机制
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //禁用csrf,csrf会默认拦截post请求，导致403错误
+        http.csrf().disable();
         http
                 .authorizeRequests()
                 //访问/r开始的请求需要认证通过

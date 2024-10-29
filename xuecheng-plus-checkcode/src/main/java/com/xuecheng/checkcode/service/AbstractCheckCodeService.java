@@ -69,12 +69,12 @@ public abstract class AbstractCheckCodeService implements CheckCodeService {
             return false;
         }
         boolean result = code_l.equalsIgnoreCase(code);
-        if(result){
+        // todo 暂时不删除，以便测试
+        /*if(result){
             //删除验证码
             checkCodeStore.remove(key);
-        }
+        }*/
         return result;
     }
-
 
 }

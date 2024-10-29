@@ -4,6 +4,7 @@ import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.checkcode.model.CheckCodeParamsDto;
 import com.xuecheng.checkcode.model.CheckCodeResultDto;
 import com.xuecheng.checkcode.service.CheckCodeService;
+import io.lettuce.core.dynamic.annotation.Param;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,6 +28,9 @@ public class CheckCodeController {
     @Resource(name = "PicCheckCodeService")
     private CheckCodeService picCheckCodeService;
 
+    @Resource(name = "NumCheckCodeService")
+    private CheckCodeService numCheckCodeService;
+
 
     @ApiOperation(value="生成验证信息", notes="生成验证信息")
     @PostMapping(value = "/pic")
@@ -44,5 +48,18 @@ public class CheckCodeController {
     public Boolean verify(String key, String code){
         Boolean isSuccess = picCheckCodeService.verify(key,code);
         return isSuccess;
+    }
+
+    /**
+     * 发送验证码
+     * @param param 验证码参数
+     * @return 返回的结果
+     */
+    @ApiOperation(value = "发送验证码")
+    @PostMapping("/phone")
+    public CheckCodeResultDto sendVerifyCode(@RequestParam("param1") String param){
+        CheckCodeParamsDto checkCodeParamsDto = new CheckCodeParamsDto();
+        checkCodeParamsDto.setParam1(param);
+        return numCheckCodeService.generate(checkCodeParamsDto);
     }
 }
