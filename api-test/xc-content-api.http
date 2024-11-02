@@ -61,3 +61,6 @@ Content-Type: application/json
 
 ### 删除老师
 DELETE {{content_host}}/content/courseTeacher/course/7/24
+
+### 查询发布信息课程发布（经过网关）
+GET {{content_host}}/content/open/course/whole/117
