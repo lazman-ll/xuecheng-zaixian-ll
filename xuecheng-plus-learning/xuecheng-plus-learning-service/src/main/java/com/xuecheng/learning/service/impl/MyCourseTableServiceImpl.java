@@ -1,16 +1,20 @@
 package com.xuecheng.learning.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xuecheng.base.exception.XueChengPlusException;
+import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.model.po.CoursePublish;
 import com.xuecheng.learning.feignclient.ContentServiceClient;
 import com.xuecheng.learning.mapper.XcChooseCourseMapper;
 import com.xuecheng.learning.mapper.XcCourseTablesMapper;
+import com.xuecheng.learning.model.dto.MyCourseTableParams;
 import com.xuecheng.learning.model.dto.XcChooseCourseDto;
 import com.xuecheng.learning.model.dto.XcCourseTablesDto;
 import com.xuecheng.learning.model.po.XcChooseCourse;
 import com.xuecheng.learning.model.po.XcCourseTables;
 import com.xuecheng.learning.service.MyCourseTableService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,7 @@ import java.util.List;
  * @Version: 1.0
  */
 @Service
+@Slf4j
 public class MyCourseTableServiceImpl implements MyCourseTableService {
 
     @Autowired
@@ -66,20 +71,20 @@ public class MyCourseTableServiceImpl implements MyCourseTableService {
     @Override
     public XcCourseTablesDto getLearningStatus(String userId, Long courseId) {
         //查询我的课程表，如果查不到说明未选课
-        LambdaQueryWrapper<XcChooseCourse> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<XcCourseTables> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
-                .eq(XcChooseCourse::getUserId,userId)
-                .eq(XcChooseCourse::getCourseId,courseId);
-        XcChooseCourse xcChooseCourse = chooseCourseMapper.selectOne(queryWrapper);
+                .eq(XcCourseTables::getUserId,userId)
+                .eq(XcCourseTables::getCourseId,courseId);
+        XcCourseTables xcCourseTables = courseTablesMapper.selectOne(queryWrapper);
         XcCourseTablesDto xcCourseTablesDto = new XcCourseTablesDto();
-        if(xcChooseCourse==null){
+        if(xcCourseTables==null){
             //未选课
             xcCourseTablesDto.setLearnStatus("702002");
             return xcCourseTablesDto;
         }
         //若查到了，还要判断是否过期
-        BeanUtils.copyProperties(xcChooseCourse,xcCourseTablesDto);
-        if (xcChooseCourse.getValidtimeEnd().isBefore(LocalDateTime.now())) {
+        BeanUtils.copyProperties(xcCourseTables,xcCourseTablesDto);
+        if (xcCourseTables.getValidtimeEnd().isBefore(LocalDateTime.now())) {
             //已过期
             xcCourseTablesDto.setLearnStatus("702003");
             return xcCourseTablesDto;
@@ -196,14 +201,50 @@ public class MyCourseTableServiceImpl implements MyCourseTableService {
         xcChooseCourse.setCreateDate(LocalDateTime.now());
         xcChooseCourse.setValidtimeStart(LocalDateTime.now());
         xcChooseCourse.setValidtimeEnd(LocalDateTime.now().plusDays(365));
-        //免费课程
+        //收费课程
         xcChooseCourse.setOrderType("70002");
-        //选课成功
+        //选课状态为待支付
         xcChooseCourse.setStatus("701002");
         int insert = chooseCourseMapper.insert(xcChooseCourse);
         if(insert<1){
             XueChengPlusException.cast("添加选课记录失败");
         }
         return xcChooseCourse;
+    }
+
+    @Transactional
+    @Override
+    public boolean saveChooseCourseSuccess(String chooseCourseId){
+        //根据订单id查询选课表
+        XcChooseCourse xcChooseCourse = chooseCourseMapper.selectById(chooseCourseId);
+        if(xcChooseCourse==null){
+            log.debug("添加选课记录失败,选课记录不存在,选课记录id:{}",chooseCourseId);
+            return false;
+        }
+        String status = xcChooseCourse.getStatus();
+        if("701002".equals(status)){
+            //未支付状态，更新选课记录为选课成功，并向课程表中插入一条数据
+            xcChooseCourse.setStatus("701001");
+            int update = chooseCourseMapper.updateById(xcChooseCourse);
+            if(update<=0){
+                log.debug("更新选课记录失败:{}",xcChooseCourse);
+                XueChengPlusException.cast("更新选课记录失败");
+            }
+            //向课程表中插入数据
+            XcCourseTables xcCourseTables = addCourseTables(xcChooseCourse);
+        }
+        return true;
+    }
+
+    @Override
+    public PageResult<XcCourseTables> myCourseTables(MyCourseTableParams params) {
+        Page<XcCourseTables> xcCourseTablesPage = new Page<>(params.getPage(), params.getSize());
+        LambdaQueryWrapper<XcCourseTables> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(XcCourseTables::getUserId,params.getUserId())
+                .orderBy(true, true,XcCourseTables::getCreateDate,XcCourseTables::getUpdateDate);
+        Page<XcCourseTables> result = courseTablesMapper.selectPage(xcCourseTablesPage, queryWrapper);
+        PageResult<XcCourseTables> pageResult =
+                new PageResult<>(result.getRecords(), result.getTotal(), result.getCurrent(), result.getSize());
+        return pageResult;
     }
 }

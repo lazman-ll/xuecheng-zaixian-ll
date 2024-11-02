@@ -1,6 +1,8 @@
 package com.xuecheng.learning.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xuecheng.base.model.PageResult;
+import com.xuecheng.learning.model.dto.MyCourseTableParams;
 import com.xuecheng.learning.model.dto.XcChooseCourseDto;
 import com.xuecheng.learning.model.dto.XcCourseTablesDto;
 import com.xuecheng.learning.model.po.XcCourseTables;
@@ -26,4 +28,18 @@ public interface MyCourseTableService {
      * @return
      */
     public XcCourseTablesDto getLearningStatus(String userId, Long courseId);
+
+    /**
+     * 保存课程支付成功
+     * @param chooseCourseId
+     * @return
+     */
+    public boolean saveChooseCourseSuccess(String chooseCourseId);
+
+    /**
+     * 我的课程表
+     * @param params
+     * @return
+     */
+    PageResult<XcCourseTables> myCourseTables(MyCourseTableParams params);
 }
